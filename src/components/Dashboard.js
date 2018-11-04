@@ -1,7 +1,37 @@
 import React, { Component } from 'react';
 import Ionicon from 'react-ionicons';
+import axios from 'axios';
+import { API_URL_BUNDLES, setHeader } from '../api';
 
 class Dashboard extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      bundles: [],
+      isLoading: false,
+      error: null
+    }
+  }
+
+  componentDidMount() {
+
+    setHeader();
+
+    this.setState({ isLoading: true });
+
+    axios.get(API_URL_BUNDLES)
+      .then(result => this.setState({
+        bundles: result.data.data,
+        isLoading: false
+      }))
+      .catch(error => this.setState({
+          error,
+          isLoading: false
+        }));
+  }
+
   render() {
     return ( 
       <section className="section">
@@ -102,88 +132,88 @@ class Dashboard extends Component {
             </div>
           </div>                  
         </div>
-        <div class="row">
-            <div class="col-lg-8 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
-                  <div class="float-right">
-                    <div class="btn-group">
-                      <a href="#" class="btn active">Week</a>
-                      <a href="#" class="btn">Month</a>
-                      <a href="#" class="btn">Year</a>
+        <div className="row">
+            <div className="col-lg-8 col-md-12 col-12 col-sm-12">
+              <div className="card">
+                <div className="card-header">
+                  <div className="float-right">
+                    <div className="btn-group">
+                      <a href="#" className="btn active">Week</a>
+                      <a href="#" className="btn">Month</a>
+                      <a href="#" className="btn">Year</a>
                     </div>
                   </div>
                   <h4>Statistics</h4>
                 </div>
-                <div class="card-body">
+                <div className="card-body">
                   <canvas id="myChart" height="158"></canvas>
-                  <div class="statistic-details mt-sm-4">
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span> 7%</small>
-                      <div class="detail-value">$243</div>
-                      <div class="detail-name">Today's Sales</div>
+                  <div className="statistic-details mt-sm-4">
+                    <div className="statistic-details-item">
+                      <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span> 7%</small>
+                      <div className="detail-value">$243</div>
+                      <div className="detail-name">Today's Sales</div>
                     </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-danger"><i class="ion-arrow-down-b"></i></span> 23%</small>
-                      <div class="detail-value">$2,902</div>
-                      <div class="detail-name">This Week's Sales</div>
+                    <div className="statistic-details-item">
+                      <small className="text-muted"><span className="text-danger"><i className="ion-arrow-down-b"></i></span> 23%</small>
+                      <div className="detail-value">$2,902</div>
+                      <div className="detail-name">This Week's Sales</div>
                     </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span>9%</small>
-                      <div class="detail-value">$12,821</div>
-                      <div class="detail-name">This Month's Sales</div>
+                    <div className="statistic-details-item">
+                      <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span>9%</small>
+                      <div className="detail-value">$12,821</div>
+                      <div className="detail-name">This Month's Sales</div>
                     </div>
-                    <div class="statistic-details-item">
-                      <small class="text-muted"><span class="text-primary"><i class="ion-arrow-up-b"></i></span> 19%</small>
-                      <div class="detail-value">$92,142</div>
-                      <div class="detail-name">This Year's Sales</div>
+                    <div className="statistic-details-item">
+                      <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span> 19%</small>
+                      <div className="detail-value">$92,142</div>
+                      <div className="detail-name">This Year's Sales</div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-4 col-md-12 col-12 col-sm-12">
-              <div class="card">
-                <div class="card-header">
+            <div className="col-lg-4 col-md-12 col-12 col-sm-12">
+              <div className="card">
+                <div className="card-header">
                   <h4>Recent Activities</h4>
                 </div>
-                <div class="card-body">             
-                  <ul class="list-unstyled list-unstyled-border">
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-1.jpeg" alt="avatar" />
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Farhan A Mujib</div>
+                <div className="card-body">             
+                  <ul className="list-unstyled list-unstyled-border">
+                    <li className="media">
+                      <img className="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-1.jpeg" alt="avatar" />
+                      <div className="media-body">
+                        <div className="float-right"><small>10m</small></div>
+                        <div className="media-title">Farhan A Mujib</div>
                         <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
                       </div>
                     </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-2.jpeg" alt="avatar" />
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Ujang Maman</div>
+                    <li className="media">
+                      <img className="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-2.jpeg" alt="avatar" />
+                      <div className="media-body">
+                        <div className="float-right"><small>10m</small></div>
+                        <div className="media-title">Ujang Maman</div>
                         <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
                       </div>
                     </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-3.jpeg" alt="avatar" />
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Rizal Fakhri</div>
+                    <li className="media">
+                      <img className="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-3.jpeg" alt="avatar" />
+                      <div className="media-body">
+                        <div className="float-right"><small>10m</small></div>
+                        <div className="media-title">Rizal Fakhri</div>
                         <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
                       </div>
                     </li>
-                    <li class="media">
-                      <img class="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-4.jpeg" alt="avatar" />
-                      <div class="media-body">
-                        <div class="float-right"><small>10m</small></div>
-                        <div class="media-title">Alfa Zulkarnain</div>
+                    <li className="media">
+                      <img className="mr-3 rounded-circle" width="50" src="../dist/img/avatar/avatar-4.jpeg" alt="avatar" />
+                      <div className="media-body">
+                        <div className="float-right"><small>10m</small></div>
+                        <div className="media-title">Alfa Zulkarnain</div>
                         <small>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.</small>
                       </div>
                     </li>
                   </ul>
-                  <div class="text-center">
-                    <a href="#" class="btn btn-primary btn-round">
+                  <div className="text-center">
+                    <a href="#" className="btn btn-primary btn-round">
                       View All
                     </a>
                   </div>

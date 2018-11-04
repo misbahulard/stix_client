@@ -27,7 +27,7 @@ class AppSidebar extends Component {
             <li className="active">
               <Link to="/"><Ionicon icon="ios-speedometer-outline" /><span>Dashboard</span></Link>
             </li>
-            <li class="menu-header">Features</li>
+            <li className="menu-header">Features</li>
             <li><Link to="/bundle"><Ionicon icon="ios-archive" /><span>STIX Bundle</span></Link></li>
             <li><Link to="/observed-data"><Ionicon icon="ios-search" /><span>Observed Data</span></Link></li>
             <li><Link to="/indicator"><Ionicon icon="ios-eye" /><span>Indicator</span></Link></li>
