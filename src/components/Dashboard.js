@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Ionicon from 'react-ionicons';
 import axios from 'axios';
-import { API_URL_BUNDLES, setHeader } from '../api';
+import { API_URL_BUNDLES, setHeader, getToken } from '../api';
 
 class Dashboard extends Component {
 
@@ -16,11 +16,9 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-
-    setHeader();
-
     this.setState({ isLoading: true });
 
+    setHeader(getToken())
     axios.get(API_URL_BUNDLES)
       .then(result => this.setState({
         bundles: result.data.data,

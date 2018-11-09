@@ -757,3 +757,15 @@ body.sidebar-gone .main-content {
 	opacity: .9;
 }
 /*end card*/
+
+/*login*/
+.login-brand {
+	margin: 20px 0;
+	margin-bottom: 40px;
+	font-size: 24px;
+	text-transform: uppercase;
+	letter-spacing: 4px;
+	color: #666;
+	text-align: center;
+}
+/*end login*/

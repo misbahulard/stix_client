@@ -49,7 +49,7 @@ class AppNavbar extends Component {
                     <Ionicon icon="ios-person" />
                     Profile
                   </DropdownItem>
-                  <DropdownItem className="has-icon">
+                  <DropdownItem className="has-icon" onClick={this.props.handleLogout}>
                     <Ionicon icon="ios-log-out" />
                     Logout
                   </DropdownItem>
