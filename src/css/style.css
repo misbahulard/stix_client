@@ -4,6 +4,9 @@ body {
     background-color: #F6F6F6;
 }
 
+/* pointer */
+.pointer {cursor: pointer;}
+
 /* btn */
 .btn.has-icon svg,
 .dropdown-item.has-icon svg {

@@ -45,11 +45,11 @@ class AppNavbar extends Component {
                   Hi, Misbah
                 </DropdownToggle>
                 <DropdownMenu right>
-                  <DropdownItem className="has-icon">
+                  <DropdownItem className="has-icon pointer">
                     <Ionicon icon="ios-person" />
                     Profile
                   </DropdownItem>
-                  <DropdownItem className="has-icon" onClick={this.props.handleLogout}>
+                  <DropdownItem className="has-icon pointer" onClick={this.props.handleLogout}>
                     <Ionicon icon="ios-log-out" />
                     Logout
                   </DropdownItem>

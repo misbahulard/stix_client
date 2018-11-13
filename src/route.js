@@ -1,4 +1,3 @@
-import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import ObservedData from './components/ObservedData';
 import Indicator from './components/Indicator';
@@ -12,10 +11,6 @@ const routes = [
     path: "/",
     exact: true,
     component: Dashboard
-  },
-  {
-    path: '/login',
-    component: Login
   },
   {
     path: "/observed-data",

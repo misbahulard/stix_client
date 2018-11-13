@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { 
-  API_URL_REFRESH_TOKEN, 
   API_URL_LOGOUT,
   setHeader, 
-  setToken, 
   getToken,
-  getRefreshToken, 
-  getRefreshTime,
   checkAuth, 
   destroySession,
-  setRefreshTime
 } from '../api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -26,26 +21,23 @@ class App extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      currentTime: new Date().getTime(),
-      execTime: getRefreshTime(),
       authenticated: checkAuth()
     };
     this.handleAuth = this.handleAuth.bind(this);
-    this.hadleLogout = this.handleLogout.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
-
+  
   handleAuth() {
     this.setState({
-      error: null,
-      authenticated: checkAuth(),
-      execTime: getRefreshTime()
+      authenticated: checkAuth()
     });
   }
 
   handleLogout() {
-    // this.setState({
-    //   isLoading: true 
-    // });
+    // call logout api
+    this.setState({
+      isLoading: true
+    });
 
     setHeader(getToken());
     axios.post(API_URL_LOGOUT).then(result => {
@@ -53,62 +45,18 @@ class App extends Component {
       if (data.success) {
         destroySession();
         this.setState({
-          isLoading: false,
-          authenticated: false,
-          execTime: null
+          authenticated: false
         });
-        return (<Redirect to={{pathname: '/login'}} />)
       } else {
-        // TODO: To something went wrong
-        this.setState({
-          isLoading: false
-        });
-        console.log(data.message)
+        // TODO: To something here / something wrong / force logout
+        this.props.handleLogout();
       }
     }).catch(error => {
-      // this.setState({
-      //   error,
-      //   isLoading: false
-      // });
-      console.log(error)
+      this.setState({
+        error,
+        isLoading: false
+      });
     });
-  }
-
-  tick() {
-    this.setState({
-      currentTime: new Date().getTime()
-    })
-    if (this.state.currentTime > this.state.execTime) {
-      this.setState({ isLoading: true });
-
-      // Call refresh token
-      var refresh_token = getRefreshToken()
-      setHeader(refresh_token)
-
-      axios.post(API_URL_REFRESH_TOKEN).then(result => {
-        var data = result.data;
-        if (data.success) {
-          setToken(data.access_token);
-          setRefreshTime();
-        } else {
-          // TODO: To something here / redirect to login
-          return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />)
-        }
-      }).catch(error => {
-        this.setState({
-          error,
-          isLoading: false
-        })
-      })
-    }
-  }
-
-  componentDidMount() {
-    if (this.state.execTime != null) {
-      setInterval(() => this.tick(), 1000);
-    } else {
-      return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />)
-    }
   }
 
   render() {
@@ -118,7 +66,7 @@ class App extends Component {
           return <Login {...props} handleAuth={this.handleAuth} authenticated={this.state.authenticated} />
         }} />
         <Route render={(props) => {
-          return <DefaultContainer handleLogout={this.handleLogout} />
+          return <DefaultContainer {...props} handleLogout={this.handleLogout} authenticated={this.state.authenticated} />
         }} />
       </Switch>
     );

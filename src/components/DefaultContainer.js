@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { 
   API_URL_REFRESH_TOKEN, 
@@ -7,7 +7,7 @@ import {
   setToken, 
   getRefreshToken, 
   getRefreshTime,
-  checkAuth 
+  setRefreshTime
 } from '../api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -23,62 +23,75 @@ class DefaultContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        sidbarPushCollapsed: false,
+        sidebarPushCollapsed: false,
         currentTime: new Date().getTime(),
         execTime: getRefreshTime(),
-        authenticated: checkAuth()
+        redirect: false,
+        intervalId: ''
     };
     this.handleClick = this.handleClick.bind(this);
-    this.handleAuth = this.handleAuth.bind(this);
   }
 
-  handleAuth() {
+  handleClick() {
     this.setState({
-      authenticated: checkAuth(),
-      execTime: getRefreshTime()
+        sidebarPushCollapsed: !this.state.sidebarPushCollapsed
     });
   }
 
   tick() {
     this.setState({
       currentTime: new Date().getTime()
-    })
+    });
     if (this.state.currentTime > this.state.execTime) {
-      // Call refresh token
-      var refresh_token = getRefreshToken()
-      setHeader(refresh_token)
+      // force logout
+      // this.props.handleLogout();
 
+      this.setState({ isLoading: true });
+
+      // Call refresh token
+      var refresh_token = getRefreshToken();
+      setHeader(refresh_token);
       axios.post(API_URL_REFRESH_TOKEN).then(result => {
         var data = result.data;
         if (data.success) {
           setToken(data.access_token);
+          setRefreshTime();
+          this.setState({
+            isLoading: false,
+            execTime: getRefreshTime()
+          });
         } else {
           // TODO: To something here / redirect to login
-          return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />)
+          this.props.handleLogout();
         }
       }).catch(error => {
-        console.log(error)
-      })
+        this.setState({
+          error,
+          isLoading: false
+        });
+      });
     }
   }
 
   componentDidMount() {
     if (this.state.execTime != null) {
-      setInterval(() => this.tick(), 1000);
+      var interval = setInterval(() => this.tick(), 1000);
+      this.setState({
+        intervalId: interval
+      });
     } else {
       return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />)
     }
-    
   }
 
-  componentDidUpdate() {
-    document.body.classList.toggle('sidebar-gone', this.state.sidbarPushCollapsed)
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   }
 
-  handleClick() {
-      this.setState({
-          sidbarPushCollapsed: !this.state.sidbarPushCollapsed
-      });
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.sidebarPushCollapsed !== prevState.sidebarPushCollapsed) {
+      document.body.classList.toggle('sidebar-gone', this.state.sidebarPushCollapsed);
+    }
   }
 
   render() {
@@ -86,7 +99,7 @@ class DefaultContainer extends Component {
       <div className="App">
         <AppNavbar handleClick={this.handleClick} handleLogout={this.props.handleLogout} />
         <AppSidebar />
-        <AppContent authenticated={this.state.authenticated} handleAuth={this.handleAuth} />
+        <AppContent authenticated={this.props.authenticated} handleAuth={this.props.handleAuth} />
         <AppFooter />
       </div>
     );
