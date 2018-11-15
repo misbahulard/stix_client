@@ -4,14 +4,13 @@ import {
   Collapse,
   Navbar,
   Nav,
-  NavItem,
-  NavLink,
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem } from 'reactstrap';
 
-import Ionicon from 'react-ionicons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 class AppNavbar extends Component {
   constructor(props) {
@@ -31,26 +30,24 @@ class AppNavbar extends Component {
     return (
       <div className="navbar-wrapper">
         <div className="navbar-bg"></div>
-        <Navbar expand="md">
+        <Navbar className="main-navbar" expand="lg">
           <a href="#" onClick={this.props.handleClick} className="nav-link nav-link-lg">
-            <Ionicon icon="ios-menu" color="#fff" />
+            <FontAwesomeIcon icon={ faBars } size="lg" />
           </a>
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="/components/">Notification</NavLink>
-              </NavItem>
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
+                <img alt="image" src="/img/avatar/avatar-1.png" width="30" className="rounded-circle mr-1"></img>
                   Hi, Misbah
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem className="has-icon pointer">
-                    <Ionicon icon="ios-person" />
+                    <FontAwesomeIcon icon={ faUser } />
                     Profile
                   </DropdownItem>
-                  <DropdownItem className="has-icon pointer" onClick={this.props.handleLogout}>
-                    <Ionicon icon="ios-log-out" />
+                  <DropdownItem className="has-icon text-danger pointer" onClick={this.props.handleLogout}>
+                    <FontAwesomeIcon icon={ faSignOutAlt } />
                     Logout
                   </DropdownItem>
                 </DropdownMenu>

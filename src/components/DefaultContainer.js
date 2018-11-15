@@ -27,7 +27,8 @@ class DefaultContainer extends Component {
         currentTime: new Date().getTime(),
         execTime: getRefreshTime(),
         redirect: false,
-        intervalId: ''
+        intervalId: '',
+        menuActivated: '/'
     };
     this.handleClick = this.handleClick.bind(this);
   }
@@ -73,6 +74,12 @@ class DefaultContainer extends Component {
     }
   }
 
+  onRouteChanged() {
+    this.setState({
+      menuActivated: this.props.location.pathname
+    });
+  }
+
   componentDidMount() {
     if (this.state.execTime != null) {
       var interval = setInterval(() => this.tick(), 1000);
@@ -80,7 +87,7 @@ class DefaultContainer extends Component {
         intervalId: interval
       });
     } else {
-      return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />)
+      return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />);
     }
   }
 
@@ -90,7 +97,10 @@ class DefaultContainer extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.sidebarPushCollapsed !== prevState.sidebarPushCollapsed) {
-      document.body.classList.toggle('sidebar-gone', this.state.sidebarPushCollapsed);
+      document.body.classList.toggle('sidebar-mini', this.state.sidebarPushCollapsed);
+    }
+    if (this.props.location !== prevProps.location) {
+      this.onRouteChanged();
     }
   }
 
@@ -98,7 +108,7 @@ class DefaultContainer extends Component {
     return (
       <div className="App">
         <AppNavbar handleClick={this.handleClick} handleLogout={this.props.handleLogout} />
-        <AppSidebar />
+        <AppSidebar menuActivated={this.state.menuActivated} />
         <AppContent authenticated={this.props.authenticated} handleAuth={this.props.handleAuth} />
         <AppFooter />
       </div>
