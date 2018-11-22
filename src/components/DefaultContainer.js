@@ -1,14 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-import { 
-  API_URL_REFRESH_TOKEN, 
-  setHeader, 
-  setToken, 
-  getRefreshToken, 
-  getRefreshTime,
-  setRefreshTime
-} from '../api';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css'
@@ -17,6 +7,7 @@ import AppNavbar from './AppNavbar';
 import AppSidebar from './AppSidebar';
 import AppContent from './AppContent';
 import AppFooter from './AppFooter';
+import Timer from './Timer';
 
 class DefaultContainer extends Component {
 
@@ -24,10 +15,6 @@ class DefaultContainer extends Component {
     super(props);
     this.state = {
         sidebarPushCollapsed: false,
-        currentTime: new Date().getTime(),
-        execTime: getRefreshTime(),
-        redirect: false,
-        intervalId: '',
         menuActivated: '/'
     };
     this.handleClick = this.handleClick.bind(this);
@@ -39,41 +26,6 @@ class DefaultContainer extends Component {
     });
   }
 
-  tick() {
-    this.setState({
-      currentTime: new Date().getTime()
-    });
-    if (this.state.currentTime > this.state.execTime) {
-      // force logout
-      // this.props.handleLogout();
-
-      this.setState({ isLoading: true });
-
-      // Call refresh token
-      var refresh_token = getRefreshToken();
-      setHeader(refresh_token);
-      axios.post(API_URL_REFRESH_TOKEN).then(result => {
-        var data = result.data;
-        if (data.success) {
-          setToken(data.access_token);
-          setRefreshTime();
-          this.setState({
-            isLoading: false,
-            execTime: getRefreshTime()
-          });
-        } else {
-          // TODO: To something here / redirect to login
-          this.props.handleLogout();
-        }
-      }).catch(error => {
-        this.setState({
-          error,
-          isLoading: false
-        });
-      });
-    }
-  }
-
   onRouteChanged() {
     this.setState({
       menuActivated: this.props.location.pathname
@@ -81,18 +33,9 @@ class DefaultContainer extends Component {
   }
 
   componentDidMount() {
-    if (this.state.execTime != null) {
-      var interval = setInterval(() => this.tick(), 1000);
-      this.setState({
-        intervalId: interval
-      });
-    } else {
-      return (<Redirect to={{pathname: '/login', state: {from: this.props.location}}} />);
-    }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    this.setState({
+      menuActivated: this.props.location.pathname
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -110,6 +53,7 @@ class DefaultContainer extends Component {
         <AppNavbar handleClick={this.handleClick} handleLogout={this.props.handleLogout} />
         <AppSidebar menuActivated={this.state.menuActivated} />
         <AppContent authenticated={this.props.authenticated} handleAuth={this.props.handleAuth} />
+        <Timer location={this.props.location} handleLogout={this.props.handleLogout} />
         <AppFooter />
       </div>
     );

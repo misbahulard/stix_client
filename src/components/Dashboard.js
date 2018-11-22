@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import axios from 'axios';
 import { 
   API_URL_OBSERVED_DATA,
@@ -12,7 +14,6 @@ import {
 } from '../api';
 
 import StixGraph from './StixGraph';
-import BarChart from './BarChart';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -30,6 +31,10 @@ class Dashboard extends Component {
     super(props);
 
     this.state = {
+      elementSize: {
+        width: 0,
+        height: 0
+      },
       observed_datas: {
         data: [],
         size: 0
@@ -54,10 +59,23 @@ class Dashboard extends Component {
         data: [],
         size: 0
       },
-      isLoading: false,
+      isLoading: true,
       error: null
     }
   }
+
+  refCallback = element => {
+    if (element) {
+      this.elementRef = element;
+      var el = element.getBoundingClientRect();
+      this.setState({
+        elementSize: {
+          width: el.width - 80,
+          height: el.height
+        }
+      })
+    }
+  };
 
   componentDidMount() {
     this.setState({ isLoading: true });
@@ -259,76 +277,43 @@ class Dashboard extends Component {
             </div>                  
           </div>
           <div className="row">
-          
-          <StixGraph data={[5,10,1,3]} size={[500,500]} />
-
-              <div className="col-lg-8 col-md-12 col-12 col-sm-12">
-                <div className="card">
-                  <div className="card-header">
-                    <div className="float-right">
-                      <div className="btn-group">
-                        <a href="#" className="btn active">Week</a>
-                        <a href="#" className="btn">Month</a>
-                        <a href="#" className="btn">Year</a>
-                      </div>
-                    </div>
-                    <h4>Statistics</h4>
-                  </div>
-                  <div className="card-body">
-                    <canvas id="myChart" height="158"></canvas>
-                    <div className="statistic-details mt-sm-4">
-                      <div className="statistic-details-item">
-                        <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span> 7%</small>
-                        <div className="detail-value">$243</div>
-                        <div className="detail-name">Today's Sales</div>
-                      </div>
-                      <div className="statistic-details-item">
-                        <small className="text-muted"><span className="text-danger"><i className="ion-arrow-down-b"></i></span> 23%</small>
-                        <div className="detail-value">$2,902</div>
-                        <div className="detail-name">This Week's Sales</div>
-                      </div>
-                      <div className="statistic-details-item">
-                        <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span>9%</small>
-                        <div className="detail-value">$12,821</div>
-                        <div className="detail-name">This Month's Sales</div>
-                      </div>
-                      <div className="statistic-details-item">
-                        <small className="text-muted"><span className="text-primary"><i className="ion-arrow-up-b"></i></span> 19%</small>
-                        <div className="detail-value">$92,142</div>
-                        <div className="detail-name">This Year's Sales</div>
-                      </div>
-                    </div>
-                  </div>
+            <div className="col-lg-8 col-md-12 col-12 col-sm-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Recent Bundle Visualization</h4>
+                </div>
+                <div className="card-body" ref={this.refCallback}>
+                  <StixGraph data={this.state.bundles.data[0]} size={this.state.elementSize} />
                 </div>
               </div>
-              <div className="col-lg-4 col-md-12 col-12 col-sm-12">
-                <div className="card">
-                  <div className="card-header">
-                    <h4>Recent Activities</h4>
-                  </div>
-                  <div className="card-body">             
-                    <ul className="list-unstyled list-unstyled-border">
-                      { this.state.bundles.data.slice(0, 5).map((item, index) => {
-                        return (
-                          <li className="media" key={index}>
-                            <div className="media-body">
-                              <div className="float-right"><small>{ String(new Date(item.objects[4].modified).toDateString()) }</small></div>
-                              <div className="media-title">{ item.id }</div>
-                              <small>From { item.objects[4].name } attacker</small>
-                            </div>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                    <div className="text-center">
-                      <a href="#" className="btn btn-primary btn-round">
-                        View All
-                      </a>
-                    </div>
+            </div>
+            <div className="col-lg-4 col-md-12 col-12 col-sm-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Recent Activities</h4>
+                </div>
+                <div className="card-body">             
+                  <ul className="list-unstyled list-unstyled-border">
+                    { this.state.bundles.data.slice(0, 5).map((item, index) => {
+                      return (
+                        <li className="media" key={index}>
+                          <div className="media-body">
+                            <div className="float-right"><small>{ String(new Date(item.objects[4].modified).toDateString()) }</small></div>
+                            <Link to={"/bundle/" + item.id} className="media-title" style={{display: "block"}}>{ item.id }</Link>
+                            {/* <div className="media-title">{ item.id }</div> */}
+                            <small>From { item.objects[4].name } attacker</small>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                  <div className="text-center">
+                    <Link to="/bundle" className="btn btn-primary btn-round">View All</Link>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </section>
       )
     }

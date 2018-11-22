@@ -35,7 +35,11 @@ const routes = [
   {
     path: "/bundle",
     component: Bundle
-  }
+  },
+  // {
+  //   path: "/bundle/:id",
+  //   component: Bundle
+  // }
 ];
 
 export default routes;

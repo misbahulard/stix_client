@@ -31,7 +31,7 @@ export function setRefreshToken(token) {
     return false;
 }
 
-export function setRefreshTime(delay = 15) {
+export function setRefreshTime(delay = 60) {
   var res = localStorage.setItem('refresh_time', new Date(new Date().getTime() + delay * 60000).getTime())
   if (res != null)
     return true;

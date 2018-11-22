@@ -1,18 +1,3 @@
-.link {
-  stroke: #aaa;
-}
-  
-.nodes {
-  cursor: pointer;
-}
-
-text {
-  font-size: 10px;
-  stroke:#555;
-}
-  
-.nodes circle {
-  stroke: #555;
-  fill: #fff;
-  stroke-width: 1.5px;
-}
+.selected {
+    filter: url("#drop-shadow");
+  }

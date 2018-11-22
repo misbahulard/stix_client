@@ -37,7 +37,8 @@ class AppSidebar extends Component {
 
   changeActiveMenu() {
     var menu = this.state.menu;
-    var active = String(this.props.menuActivated).replace(/[^\w\s]/gi, '');
+    var active_arr = String(this.props.menuActivated).split("/");
+    var active = active_arr[1].replace(/[^\w\s]/gi, "");
 
     if (active == '') {
       active = 'root';
