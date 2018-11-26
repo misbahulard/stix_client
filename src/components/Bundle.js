@@ -10,7 +10,7 @@ import {
 import StixGraph from './StixGraph';
 
 import ReactTable from "react-table";
-import "react-table/react-table.css";
+import "../css/custom-react-table.css";
 
 class Bundle extends Component {
 
@@ -27,14 +27,15 @@ class Bundle extends Component {
         data: [],
         size: 0
       },
-      selectedBundle: {},
-      selectedNode: {},
-      legend: {},
+      selectedBundle: null,
+      selectedNode: null,
+      legend: null,
       isLoading: true,
       error: null
     }
 
     this.handleSelectNode = this.handleSelectNode.bind(this);
+    this.handleClickId = this.handleClickId.bind(this);
   }
 
   refCallback = element => {
@@ -44,7 +45,7 @@ class Bundle extends Component {
         elementRef: element,
         elementSize: {
           width: el.width - 80,
-          height: el.height
+          height: el.height + 150 
         }
       })
     }
@@ -56,7 +57,7 @@ class Bundle extends Component {
       this.setState({
         elementSize: {
           width: el.width - 80,
-          height: el.height + 450
+          height: el.height + 150
         }
       })
     }
@@ -65,6 +66,12 @@ class Bundle extends Component {
   handleSelectNode(data) {
     this.setState({
       selectedNode: this.normalizeObject(data)
+    });
+  }
+
+  handleClickId(data) {
+    this.setState({
+      selectedBundle: data
     });
   }
 
@@ -150,6 +157,25 @@ class Bundle extends Component {
             <div className="col-lg-4 col-md-12 col-12 col-sm-12">
               <div className="card">
                 <div className="card-header">
+                  <h4>Legend</h4>
+                </div>
+                <div className="card-body"> 
+                  <div className="row">
+                    { this.state.legend.map((item, index) => {
+                      return (
+                        <div className="col-lg-6 col-md-6 col-6 col-sm-12" key={index}>
+                          <div className="media">
+                            <img alt={item.icon} src={"/img/icons/" + item.icon} width="30" className="rounded-circle mr-2"></img>
+                            <p>{item.name}</p>
+                          </div>
+                        </div>
+                      )  
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-header">
                   <h4>Selected Node</h4>
                 </div>
                 <div className="card-body">             
@@ -178,21 +204,6 @@ class Bundle extends Component {
                   </div>
                 </div>
               </div>
-              <div className="card">
-                <div className="card-header">
-                  <h4>Legend</h4>
-                </div>
-                <div className="card-body"> 
-                  { this.state.legend.map((item, index) => {
-                    return (
-                      <div className="media" key={index}>
-                        <img alt={item.icon} src={"/img/icons/" + item.icon} width="28" className="rounded-circle mr-2"></img>
-                        <p>{item.name}</p>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
             </div>
           </div>
           <div className="row">
@@ -207,7 +218,10 @@ class Bundle extends Component {
                     columns={[
                       {
                         Header: "ID",
-                        accessor: "id"
+                        accessor: "id",
+                        Cell: row => (
+                          <div style={{cursor: "pointer"}} onClick={this.handleClickId.bind(this, row.original)}>{row.value}</div>
+                        )
                       },
                       {
                         Header: "Type",
@@ -223,7 +237,26 @@ class Bundle extends Component {
                         accessor: "spec_version"
                       }
                     ]}
-                    defaultPageSize={20}
+                    // getTdProps={(state, rowInfo, column, instance) => {
+                    //   return {
+                    //     onClick: (e, handleOriginal) => {
+                    //       var data = rowInfo.original
+                    //       this.setState({
+                    //         selectedBundle: data
+                    //       });
+                  
+                    //       // IMPORTANT! React-Table uses onClick internally to trigger
+                    //       // events like expanding SubComponents and pivots.
+                    //       // By default a custom 'onClick' handler will override this functionality.
+                    //       // If you want to fire the original onClick handler, call the
+                    //       // 'handleOriginal' function.
+                    //       if (handleOriginal) {
+                    //         handleOriginal();
+                    //       }
+                    //     }
+                    //   }
+                    // }}
+                    defaultPageSize={10}
                     className="-striped -highlight"
                     SubComponent={row => {
                       return (

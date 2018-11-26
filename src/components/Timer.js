@@ -30,32 +30,33 @@ class Timer extends Component {
     });
     if (this.state.currentTime > this.state.execTime) {
       // force logout
-      // this.props.handleLogout();
+      console.log('logout!')
+      this.props.handleLogout();
 
-      this.setState({ isLoading: true });
+      // this.setState({ isLoading: true });
 
-      // Call refresh token
-      var refresh_token = getRefreshToken();
-      setHeader(refresh_token);
-      axios.post(API_URL_REFRESH_TOKEN).then(result => {
-        var data = result.data;
-        if (data.success) {
-          setToken(data.access_token);
-          setRefreshTime();
-          this.setState({
-            isLoading: false,
-            execTime: getRefreshTime()
-          });
-        } else {
-          // TODO: To something here / redirect to login
-          this.props.handleLogout();
-        }
-      }).catch(error => {
-        this.setState({
-          error,
-          isLoading: false
-        });
-      });
+      // // Call refresh token
+      // var refresh_token = getRefreshToken();
+      // setHeader(refresh_token);
+      // axios.post(API_URL_REFRESH_TOKEN).then(result => {
+      //   var data = result.data;
+      //   if (data.success) {
+      //     setToken(data.access_token);
+      //     setRefreshTime();
+      //     this.setState({
+      //       isLoading: false,
+      //       execTime: getRefreshTime()
+      //     });
+      //   } else {
+      //     // TODO: To something here / redirect to login
+      //     this.props.handleLogout();
+      //   }
+      // }).catch(error => {
+      //   this.setState({
+      //     error,
+      //     isLoading: false
+      //   });
+      // });
     }
   }
 

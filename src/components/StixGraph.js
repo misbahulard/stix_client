@@ -44,6 +44,9 @@ class StixGraph extends Component {
 
   createGraph() {
     if (this.props.data != null) {
+      // RESET FIRST
+      // reset();
+
       // Bagian Config
       const nodeSvg = this.nodeSvg;
       var d3Config = {
@@ -183,7 +186,7 @@ class StixGraph extends Component {
         return d.id; 
       }).distance(150).strength(2))
       .force('charge', d3.forceManyBody()
-        .strength(-500)
+        .strength(-400)
         .theta(0.8)
         .distanceMax(d3Config.linkMultiplier * d3Config.nodeSize)
       )
@@ -249,6 +252,20 @@ class StixGraph extends Component {
       /* ******************************************************
       *                 HELPER FUNCTION
       * ******************************************************/
+
+      function reset() {
+        // inisialisasi variabel
+        dataRelationships = [];
+        tempRelationships = [];
+        dataNodes = [];
+        if (simulation !== undefined) {
+          simulation.stop();
+        }
+        if (container !== undefined) {
+          container.remove();
+        }
+      }
+
       /* ******************************************************
       * Draws an arrow between two points.
       * ******************************************************/

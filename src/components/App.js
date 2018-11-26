@@ -38,9 +38,10 @@ class App extends Component {
     this.setState({
       isLoading: true
     });
-
+    
     setHeader(getToken());
     axios.post(API_URL_LOGOUT).then(result => {
+      console.log(result)
       var data = result.data;
       if (data.success) {
         destroySession();
@@ -49,13 +50,20 @@ class App extends Component {
         });
       } else {
         // TODO: To something here / something wrong / force logout
-        this.props.handleLogout();
+        console.log("log out failed, something wrong.")
       }
     }).catch(error => {
       this.setState({
         error,
         isLoading: false
       });
+      // jika status "unauthorized" maka paksa log out / hapus token 
+      if (error.response.status === 401) {
+        destroySession();
+        this.setState({
+          authenticated: false
+        });
+      }
     });
   }
 
