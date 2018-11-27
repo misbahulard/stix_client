@@ -14,26 +14,37 @@ const routes = [
   },
   {
     path: "/observed-data",
+    exact: true,
     component: ObservedData
   },
   {
     path: "/indicator",
+    exact: true,
     component: Indicator
   },
   {
     path: "/identity",
+    exact: true,
     component: Identity
   },
   {
     path: "/threat-actor",
+    exact: true,
     component: ThreatActor
   },
   {
     path: "/attack-pattern",
+    exact: true,
     component: AttackPattern
   },
   {
     path: "/bundle",
+    exact: true,
+    component: Bundle
+  },
+  {
+    path: "/bundle/:id",
+    exact: true,
     component: Bundle
   }
 ];

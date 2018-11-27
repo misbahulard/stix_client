@@ -299,8 +299,9 @@ class Dashboard extends Component {
                         <li className="media" key={index}>
                           <div className="media-body">
                             <div className="float-right"><small>{ String(new Date(item.objects[4].modified).toDateString()) }</small></div>
-                            <Link to={"/bundle/" + item.id} className="media-title" style={{display: "block"}}>{ item.id }</Link>
-                            {/* <div className="media-title">{ item.id }</div> */}
+                            <div className="media-title">
+                              <Link to={"/bundle/" + item.id}>{ item.id }</Link>
+                            </div>
                             <small>From { item.objects[4].name } attacker</small>
                           </div>
                         </li>

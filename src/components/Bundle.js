@@ -12,6 +12,9 @@ import StixGraph from './StixGraph';
 import ReactTable from "react-table";
 import "../css/custom-react-table.css";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+
 class Bundle extends Component {
 
   constructor(props) {
@@ -105,30 +108,55 @@ class Bundle extends Component {
   }
 
   componentDidMount() {
-    // console.log(this.props.match.params.id)
-
     // call bundle
     setHeader(getToken())
-    axios.get(API_URL_BUNDLES)
-      .then(result => {
-        this.setState({
-          bundles: {
-            data: result.data.data,
-            size: result.data.size
-          },
-          selectedBundle: result.data.data[0],
-          selectedNode: this.normalizeObject(result.data.data[0].objects[0]),
-          legend: this.getLegend(result.data.data[0]),
-          isLoading: false
+
+    if (this.props.match.params.id) {
+      var id = this.props.match.params.id;
+      axios.get(API_URL_BUNDLES + "/" + id)
+        .then(result => {
+          this.setState({
+            bundles: {
+              data: result.data,
+              size: 1
+            },
+            selectedBundle: result.data,
+            selectedNode: this.normalizeObject(result.data.objects[0]),
+            legend: this.getLegend(result.data),
+            isLoading: false
+          })
         })
-      })
-      .catch(error => this.setState({
-          error,
-          isLoading: false
-        }));
+        .catch(error => this.setState({
+            error,
+            isLoading: false
+          }));
+    } else {
+      axios.get(API_URL_BUNDLES)
+        .then(result => {
+          this.setState({
+            bundles: {
+              data: result.data.data,
+              size: result.data.size
+            },
+            selectedBundle: result.data.data[0],
+            selectedNode: this.normalizeObject(result.data.data[0].objects[0]),
+            legend: this.getLegend(result.data.data[0]),
+            isLoading: false
+          })
+        })
+        .catch(error => this.setState({
+            error,
+            isLoading: false
+          }));
+    }
   }
 
   render() {
+    var singleBundle = false;
+    if (this.props.match.params.id) {
+      singleBundle = true;
+    }
+
     if (this.state.isLoading === true ) {
       return (
         <section className="section">
@@ -141,7 +169,14 @@ class Bundle extends Component {
       return (
         <section className="section">
           <div className="section-header">
-            <h1>Bundle</h1>
+            { singleBundle ? 
+              <span>
+                <FontAwesomeIcon icon={ faChevronLeft } size="2x" color="#34395e" style={{ marginRight: "15px", cursor: "pointer"}} onClick={e => this.props.history.push("/")}/>
+                <h1>Bundle {this.props.match.params.id}</h1>
+              </span>
+              : 
+              <h1>Bundle</h1> 
+            }
           </div>
           <div className="row">
             <div className="col-lg-8 col-md-12 col-12 col-sm-12">
@@ -206,7 +241,9 @@ class Bundle extends Component {
               </div>
             </div>
           </div>
-          <div className="row">
+          {/* if is not single bundle render an table */}
+          { singleBundle ? null :
+            <div className="row">
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card">
                 <div className="card-header">
@@ -220,7 +257,7 @@ class Bundle extends Component {
                         Header: "ID",
                         accessor: "id",
                         Cell: row => (
-                          <div style={{cursor: "pointer"}} onClick={this.handleClickId.bind(this, row.original)}>{row.value}</div>
+                          <div className="rt-td-link" onClick={this.handleClickId.bind(this, row.original)}>{row.value}</div>
                         )
                       },
                       {
@@ -237,25 +274,6 @@ class Bundle extends Component {
                         accessor: "spec_version"
                       }
                     ]}
-                    // getTdProps={(state, rowInfo, column, instance) => {
-                    //   return {
-                    //     onClick: (e, handleOriginal) => {
-                    //       var data = rowInfo.original
-                    //       this.setState({
-                    //         selectedBundle: data
-                    //       });
-                  
-                    //       // IMPORTANT! React-Table uses onClick internally to trigger
-                    //       // events like expanding SubComponents and pivots.
-                    //       // By default a custom 'onClick' handler will override this functionality.
-                    //       // If you want to fire the original onClick handler, call the
-                    //       // 'handleOriginal' function.
-                    //       if (handleOriginal) {
-                    //         handleOriginal();
-                    //       }
-                    //     }
-                    //   }
-                    // }}
                     defaultPageSize={10}
                     className="-striped -highlight"
                     SubComponent={row => {
@@ -303,6 +321,8 @@ class Bundle extends Component {
               </div>
             </div>
           </div>
+          }
+          
         </section>
       )
     }

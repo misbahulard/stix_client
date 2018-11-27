@@ -1415,6 +1415,11 @@ h6 .badge {
 .media .media-title a {
   font-weight: inherit;
   color: #000;
+  display: block;
+}
+.media .media-title a:hover {
+  color: #6777ef;
+  text-decoration: underline;
 }
 .media .media-description {
   line-height: 24px;
