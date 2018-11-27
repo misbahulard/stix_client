@@ -45,8 +45,7 @@ class StixGraph extends Component {
   createGraph() {
     if (this.props.data != null) {
       // RESET FIRST
-      // reset();
-
+      
       // Bagian Config
       const nodeSvg = this.nodeSvg;
       var d3Config = {
@@ -58,12 +57,15 @@ class StixGraph extends Component {
         height: this.state.size.height,
         iconDir: "icons"
       };
-
+      
       // inisialisasi variabel
       var dataRelationships = [];
       var tempRelationships = [];
       var dataNodes = [];
 
+      // reset node
+      reset();
+      
       var objects = this.props.data.objects;
       objects.forEach(item => {
         if (item['type'] === 'relationship') {
@@ -258,12 +260,7 @@ class StixGraph extends Component {
         dataRelationships = [];
         tempRelationships = [];
         dataNodes = [];
-        if (simulation !== undefined) {
-          simulation.stop();
-        }
-        if (container !== undefined) {
-          container.remove();
-        }
+        d3.select(nodeSvg).selectAll("g").remove();
       }
 
       /* ******************************************************
