@@ -98,7 +98,6 @@ class Bundle extends Component {
   }
 
   fetchData(state, instance) {
-    console.log(state)
     this.setState({
       bundles: {
         loading: true
@@ -217,7 +216,7 @@ class Bundle extends Component {
           </div>
           <div className="row">
             <div className="col-lg-8 col-md-12 col-12 col-sm-12">
-              <div className="card">
+              <div className="card card-primary">
                 <div className="card-header">
                   <h4>Recent Bundle Visualization</h4>
                 </div>
@@ -227,7 +226,7 @@ class Bundle extends Component {
               </div>
             </div>
             <div className="col-lg-4 col-md-12 col-12 col-sm-12">
-              <div className="card">
+              <div className="card card-warning">
                 <div className="card-header">
                   <h4>Legend</h4>
                 </div>
@@ -246,7 +245,7 @@ class Bundle extends Component {
                   </div>
                 </div>
               </div>
-              <div className="card">
+              <div className="card card-info">
                 <div className="card-header">
                   <h4>Selected Node</h4>
                 </div>
@@ -281,88 +280,89 @@ class Bundle extends Component {
           {/* if is not single bundle render an table */}
           { singleBundle ? null :
             <div className="row">
-            <div className="col-lg-12 col-md-12 col-12 col-sm-12">
-              <div className="card">
-                <div className="card-header">
-                  <h4>Bundles Data</h4>
-                </div>
-                <div className="card-body">
-                  <ReactTable
-                    columns={[
-                      {
-                        Header: "ID",
-                        accessor: "id",
-                        Cell: row => (
-                          <div className="rt-td-link" onClick={this.handleClickId.bind(this, row.original)}>{row.value}</div>
-                        )
-                      },
-                      {
-                        Header: "Type",
-                        accessor: "type"
-                      },
-                      {
-                        Header: "Objects",
-                        id: "objects",
-                        accessor: d => "[ objects ]",
-                      },
-                      {
-                        Header: "Spec Version",
-                        accessor: "spec_version"
-                      }
-                    ]}
-                    data={this.state.bundles.data}
-                    pages={this.state.bundles.pages}
-                    loading={this.state.bundles.loading}
-                    manual
-                    filterable
-                    onFetchData={this.fetchData}
-                    defaultPageSize={10}
-                    className="-striped -highlight"
-                    SubComponent={row => {
-                      return (
-                        <div style={{ padding: "20px" }}>
-                        <h6 className="text-center">Bundle object details</h6>
-                          
-                          <ReactTable 
-                            data={row.original.objects}
-                            columns={[
-                              {
-                                Header: "Modified",
-                                id: "modified",
-                                accessor: d => String(new Date(d.modified).toDateString())
-                              },
-                              {
-                                Header: "ID",
-                                accessor: "id"
-                              },
-                              {
-                                Header: "Type",
-                                accessor: "type"
-                              },
-                              {
-                                Header: "Name",
-                                id: "name",
-                                accessor: d => {
-                                  if (d.name != null) {
-                                    return d.name;
-                                  } else {
-                                    return "-";
+              <div className="col-lg-12 col-md-12 col-12 col-sm-12">
+                <div className="card card-primary">
+                  <div className="card-header">
+                    <h4>Bundles Data</h4>
+                  </div>
+                  <div className="card-body">
+                    <ReactTable
+                      columns={[
+                        {
+                          Header: "ID",
+                          accessor: "id",
+                          Cell: row => (
+                            <div className="rt-td-link" onClick={this.handleClickId.bind(this, row.original)}>{row.value}</div>
+                          ),
+                          minWidth: 200
+                        },
+                        {
+                          Header: "Type",
+                          accessor: "type"
+                        },
+                        {
+                          Header: "Objects",
+                          id: "objects",
+                          accessor: d => "[ objects ]",
+                        },
+                        {
+                          Header: "Spec Version",
+                          accessor: "spec_version"
+                        }
+                      ]}
+                      data={this.state.bundles.data}
+                      pages={this.state.bundles.pages}
+                      loading={this.state.bundles.loading}
+                      manual
+                      filterable
+                      onFetchData={this.fetchData}
+                      defaultPageSize={10}
+                      className="-striped -highlight"
+                      SubComponent={row => {
+                        return (
+                          <div style={{ padding: "20px" }}>
+                          <h6 className="text-center">Bundle object details</h6>
+                            
+                            <ReactTable 
+                              data={row.original.objects}
+                              columns={[
+                                {
+                                  Header: "Modified",
+                                  id: "modified",
+                                  accessor: d => String(new Date(d.modified).toDateString())
+                                },
+                                {
+                                  Header: "ID",
+                                  accessor: "id"
+                                },
+                                {
+                                  Header: "Type",
+                                  accessor: "type"
+                                },
+                                {
+                                  Header: "Name",
+                                  id: "name",
+                                  accessor: d => {
+                                    if (d.name != null) {
+                                      return d.name;
+                                    } else {
+                                      return "-";
+                                    }
                                   }
                                 }
-                              }
-                            ]}
-                            minRows={0}
-                            showPagination={false}
-                            className="-striped -highlight"
-                          />
-                        </div>
-                      )
-                    }}
-                  />
+                              ]}
+                              minRows={0}
+                              showPagination={false}
+                              className="-striped -highlight"
+                            />
+                          </div>
+                        )
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           }
           
         </section>

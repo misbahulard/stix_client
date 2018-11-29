@@ -181,7 +181,7 @@
 }
 
 .ReactTable .rt-tbody .rt-td {
-    border-right: 1px solid rgba(0, 0, 0, 0.02);
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .ReactTable .rt-tbody .rt-td:last-child {

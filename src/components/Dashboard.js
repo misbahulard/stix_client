@@ -82,7 +82,7 @@ class Dashboard extends Component {
 
     setHeader(getToken())
     // call observed-data
-    axios.get(API_URL_OBSERVED_DATA)
+    axios.post(API_URL_OBSERVED_DATA)
       .then(result => this.setState({
         observed_datas: {
           data: result.data.data,
@@ -96,7 +96,7 @@ class Dashboard extends Component {
         }));
 
     // call indicator
-    axios.get(API_URL_INDICATOR)
+    axios.post(API_URL_INDICATOR)
       .then(result => this.setState({
         indicators: {
           data: result.data.data,
@@ -110,7 +110,7 @@ class Dashboard extends Component {
         }));
     
     // call identity
-    axios.get(API_URL_IDENTITY)
+    axios.post(API_URL_IDENTITY)
       .then(result => this.setState({
         identities: {
           data: result.data.data,
@@ -124,7 +124,7 @@ class Dashboard extends Component {
         }));
 
     // call threat-actor
-    axios.get(API_URL_THREAT_ACTOR)
+    axios.post(API_URL_THREAT_ACTOR)
       .then(result => this.setState({
         threat_actors: {
           data: result.data.data,
@@ -138,7 +138,7 @@ class Dashboard extends Component {
         }));
 
     // call attack-pattern
-    axios.get(API_URL_ATTACK_PATTERN)
+    axios.post(API_URL_ATTACK_PATTERN)
       .then(result => this.setState({
         attack_patterns: {
           data: result.data.data,
