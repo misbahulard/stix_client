@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import {
   API_URL_LOGIN, 
+  setUsername,
   setToken, 
   setRefreshToken, 
   setRefreshTime 
@@ -40,6 +41,7 @@ class Login extends Component {
     }).then(result => {
       var data = result.data;
       if (data.success) {
+        setUsername(this.state.username);
         setToken(data.access_token);
         setRefreshToken(data.refresh_token);
         setRefreshTime();

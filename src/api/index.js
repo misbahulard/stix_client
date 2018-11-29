@@ -15,12 +15,28 @@ export function setHeader(token) {
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
 
-export function setToken(token) {
-  var res = localStorage.setItem('token', token);
+export function setUsername(username) {
+  var res = localStorage.setItem('username', username)
   if (res != null)
     return true;
   else
     return false;
+}
+
+export function getUsername() {
+  return localStorage.getItem('username');
+}
+
+export function setToken(token) {
+  var res = localStorage.setItem('token', token);
+  if (res != null)
+  return true;
+  else
+  return false;
+}
+
+export function getToken(jwt) {
+  return localStorage.getItem('token');
 }
 
 export function setRefreshToken(token) {
@@ -31,20 +47,16 @@ export function setRefreshToken(token) {
     return false;
 }
 
+export function getRefreshToken(jwt) {
+  return localStorage.getItem('refresh_token');
+}
+
 export function setRefreshTime(delay = 60) {
   var res = localStorage.setItem('refresh_time', new Date(new Date().getTime() + delay * 60000).getTime())
   if (res != null)
     return true;
   else
     return false;
-}
-
-export function getToken(jwt) {
-  return localStorage.getItem('token');
-}
-
-export function getRefreshToken(jwt) {
-  return localStorage.getItem('refresh_token');
 }
 
 export function getRefreshTime() {

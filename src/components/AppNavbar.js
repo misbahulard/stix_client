@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { getUsername } from '../api';
+
 import {
   Collapse,
   Navbar,
@@ -18,12 +20,18 @@ class AppNavbar extends Component {
 
     this.toggle = this.toggle.bind(this);
     this.state = {
+      username: '',
       isOpen: false
     };
   }
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
+    });
+  }
+  componentDidMount() {
+    this.setState({
+      username: getUsername()
     });
   }
   render() {
@@ -39,7 +47,7 @@ class AppNavbar extends Component {
               <UncontrolledDropdown nav inNavbar>
                 <DropdownToggle nav caret>
                 <img alt="image" src="/img/avatar/avatar-1.png" width="30" className="rounded-circle mr-1"></img>
-                  Hi, Misbah
+                  Hi, {this.state.username}
                 </DropdownToggle>
                 <DropdownMenu right>
                   <DropdownItem className="has-icon pointer">
