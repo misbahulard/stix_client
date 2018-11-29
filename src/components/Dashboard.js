@@ -152,7 +152,7 @@ class Dashboard extends Component {
         }));
 
     // call bundle
-    axios.get(API_URL_BUNDLES)
+    axios.post(API_URL_BUNDLES)
       .then(result => this.setState({
         bundles: {
           data: result.data.data,

@@ -28,7 +28,8 @@ class Bundle extends Component {
       },
       bundles: {
         data: [],
-        size: 0
+        pages: null,
+        loading: false
       },
       selectedBundle: null,
       selectedNode: null,
@@ -39,6 +40,7 @@ class Bundle extends Component {
 
     this.handleSelectNode = this.handleSelectNode.bind(this);
     this.handleClickId = this.handleClickId.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
 
   refCallback = element => {
@@ -49,18 +51,6 @@ class Bundle extends Component {
         elementSize: {
           width: el.width - 80,
           height: el.height + 150 
-        }
-      })
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.elementSize.width !== prevState.elementSize.width) {
-      var el = this.state.elementRef.getBoundingClientRect();
-      this.setState({
-        elementSize: {
-          width: el.width - 80,
-          height: el.height + 150
         }
       })
     }
@@ -107,6 +97,51 @@ class Bundle extends Component {
     return legend;
   }
 
+  fetchData(state, instance) {
+    console.log(state)
+    this.setState({
+      bundles: {
+        loading: true
+      }
+    })
+
+    axios.post(API_URL_BUNDLES, {
+      offset: state.page,
+      limit: state.pageSize,
+      sorted: state.sorted,
+      filtered: state.filtered
+    })
+      .then(result => {
+        this.setState({
+          bundles: {
+            data: result.data.data,
+            pages: result.data.size,
+            loading: false
+          },
+          selectedBundle: result.data.data[0],
+          selectedNode: this.normalizeObject(result.data.data[0].objects[0]),
+          legend: this.getLegend(result.data.data[0]),
+          isLoading: false
+        })
+      })
+      .catch(error => this.setState({
+          error,
+          isLoading: false
+        }));
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.elementSize.width !== prevState.elementSize.width) {
+      var el = this.state.elementRef.getBoundingClientRect();
+      this.setState({
+        elementSize: {
+          width: el.width - 80,
+          height: el.height + 150
+        }
+      })
+    }
+  }
+
   componentDidMount() {
     // call bundle
     setHeader(getToken())
@@ -118,7 +153,8 @@ class Bundle extends Component {
           this.setState({
             bundles: {
               data: result.data,
-              size: 1
+              pages: 1,
+              loading: false
             },
             selectedBundle: result.data,
             selectedNode: this.normalizeObject(result.data.objects[0]),
@@ -131,12 +167,13 @@ class Bundle extends Component {
             isLoading: false
           }));
     } else {
-      axios.get(API_URL_BUNDLES)
+      axios.post(API_URL_BUNDLES)
         .then(result => {
           this.setState({
             bundles: {
               data: result.data.data,
-              size: result.data.size
+              pages: result.data.size,
+              loading: false
             },
             selectedBundle: result.data.data[0],
             selectedNode: this.normalizeObject(result.data.data[0].objects[0]),
@@ -251,7 +288,6 @@ class Bundle extends Component {
                 </div>
                 <div className="card-body">
                   <ReactTable
-                    data={this.state.bundles.data}
                     columns={[
                       {
                         Header: "ID",
@@ -274,6 +310,12 @@ class Bundle extends Component {
                         accessor: "spec_version"
                       }
                     ]}
+                    data={this.state.bundles.data}
+                    pages={this.state.bundles.pages}
+                    loading={this.state.bundles.loading}
+                    manual
+                    filterable
+                    onFetchData={this.fetchData}
                     defaultPageSize={10}
                     className="-striped -highlight"
                     SubComponent={row => {
