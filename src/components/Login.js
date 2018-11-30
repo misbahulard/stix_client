@@ -16,7 +16,9 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
-      redirect: false
+      redirect: false,
+      message: '',
+      isError: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -45,15 +47,25 @@ class Login extends Component {
         setToken(data.access_token);
         setRefreshToken(data.refresh_token);
         setRefreshTime();
+        this.setState({
+          message: data.message,
+          isError: false
+        });
         this.props.handleAuth();
         this.props.history.push('/');
       } else {
         // TODO: To something here / tampilkan pesan error
-        console.log(data.success);
+        this.setState({
+          message: data.message,
+          isError: true
+        })
       }
     }).catch(error => {
       // TODO: if there is error in server
-      console.log(error);
+      this.setState({
+        message: error,
+        isError: true
+      })
     })
   }
 
@@ -102,7 +114,11 @@ class Login extends Component {
                   </form>
                 </div>
               </div>
-
+              {this.state.isError ?
+              <div className="alert alert-danger">
+                {this.state.message}
+              </div> : null
+              }
               </div>
             </div>
           </div>
