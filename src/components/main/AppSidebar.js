@@ -1,3 +1,7 @@
+/**
+ * AppSidebar.js
+ * Berfungsi sebagai container Sidebar
+ */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,8 +16,15 @@ import {
   faCodeBranch
 } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Class yang mewakili komponen Sidebar
+ */
 class AppSidebar extends Component {
 
+  /**
+   * Membuat Sidebar
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -29,12 +40,21 @@ class AppSidebar extends Component {
     };
   }
 
+  /**
+   * saat komponen mendapatkan perubahan maka lakukan perubahan juga terhadap menu sidebar yang aktif
+   * dengan memanggil fungsi @function changeActiveMenu
+   * @param {props} prevProps - properti sebelumnya 
+   */
   componentDidUpdate(prevProps) {
     if (prevProps.menuActivated !== this.props.menuActivated ) {
       this.changeActiveMenu();
     };
   }
 
+  /**
+   * berfungsi untuk mengubah menu yang aktif saat ini
+   * yang didapat dari routing yang saat ini ada di cocokkan dengan kondisi menu yang sebelumnya
+   */
   changeActiveMenu() {
     var menu = this.state.menu;
     var active_arr = String(this.props.menuActivated).split("/");

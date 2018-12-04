@@ -2,20 +2,20 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 import { 
-  API_URL_INDICATOR, 
+  API_URL_ATTACK_PATTERN, 
   setHeader, 
   getToken 
-} from '../api';
+} from '../../api';
 
 import ReactTable from "react-table";
-import "../css/custom-react-table.css";
+import "../../css/custom-react-table.css";
 
-class Indicator extends Component {
+class AttackPattern extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      indicators: {
+      attackPatterns: {
         data: [],
         pages: null,
         loading: false
@@ -36,12 +36,12 @@ class Indicator extends Component {
 
   fetchData(state, instance) {
     this.setState({
-      indicators: {
+      attackPatterns: {
         loading: true
       }
     })
 
-    axios.post(API_URL_INDICATOR, {
+    axios.post(API_URL_ATTACK_PATTERN, {
       offset: state.page,
       limit: state.pageSize,
       sorted: state.sorted,
@@ -49,7 +49,7 @@ class Indicator extends Component {
     })
       .then(result => {
         this.setState({
-          indicators: {
+          attackPatterns: {
             data: result.data.data,
             pages: result.data.size,
             loading: false
@@ -68,10 +68,10 @@ class Indicator extends Component {
 
     if (this.props.match.params.id) {
       var id = this.props.match.params.id;
-      axios.get(API_URL_INDICATOR + "/" + id)
+      axios.get(API_URL_ATTACK_PATTERN + "/" + id)
         .then(result => {
           this.setState({
-            indicators: {
+            attackPatterns: {
               data: result.data,
               pages: 1,
               loading: false
@@ -85,10 +85,10 @@ class Indicator extends Component {
             isLoading: false
           }));
     } else {
-      axios.post(API_URL_INDICATOR)
+      axios.post(API_URL_ATTACK_PATTERN)
         .then(result => {
           this.setState({
-            indicators: {
+            attackPatterns: {
               data: result.data.data,
               pages: result.data.size,
               loading: false
@@ -117,13 +117,13 @@ class Indicator extends Component {
       return (
         <section className="section">
           <div className="section-header">
-            <h1>Indicators</h1> 
+            <h1>Attack Patterns</h1> 
           </div>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Indicator Detail</h4>
+                  <h4>Attack Pattern Detail</h4>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -139,15 +139,6 @@ class Indicator extends Component {
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Description</div>
                     <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.description}</div>
 
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Labels</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.labels}</div>
-
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Pattern</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.pattern}</div>
-                    
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Valid From</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.valid_from).toDateString())}</div>
-
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Created</div>
                     <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.created).toDateString())}</div>
 
@@ -162,7 +153,7 @@ class Indicator extends Component {
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Indicator Data</h4>
+                  <h4>Attack Pattern Data</h4>
                 </div>
                 <div className="card-body">
                   <ReactTable
@@ -194,9 +185,9 @@ class Indicator extends Component {
                         accessor: d => String(new Date(d.modified).toDateString())
                       }
                     ]}
-                    data={this.state.indicators.data}
-                    pages={this.state.indicators.pages}
-                    loading={this.state.indicators.loading}
+                    data={this.state.attackPatterns.data}
+                    pages={this.state.attackPatterns.pages}
+                    loading={this.state.attackPatterns.loading}
                     manual
                     filterable
                     onFetchData={this.fetchData}
@@ -213,4 +204,4 @@ class Indicator extends Component {
   }
 }
 
-export default Indicator;
+export default AttackPattern;

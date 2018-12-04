@@ -1,16 +1,27 @@
+/**
+ * DefaultContainer.js
+ * Berfungsi untuk container default semua item
+ */
 import React, { Component } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../css/style.css'
+import '../../css/style.css'
 
-import AppNavbar from './AppNavbar';
-import AppSidebar from './AppSidebar';
-import AppContent from './AppContent';
-import AppFooter from './AppFooter';
-import Timer from './Timer';
+import AppNavbar from '../main/AppNavbar';
+import AppSidebar from '../main/AppSidebar';
+import AppContent from '../main/AppContent';
+import AppFooter from '../main/AppFooter';
+import Timer from '../util/Timer';
 
+/**
+ * Class yang mewakili Default Container
+ */
 class DefaultContainer extends Component {
 
+  /**
+   * Membuat Default Container
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -20,24 +31,44 @@ class DefaultContainer extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
+  /**
+   * handle perubahan event pada click
+   * Setel state sidebar ke true / false
+   * @param {event} event - javascript event onClick
+   */
   handleClick() {
     this.setState({
         sidebarPushCollapsed: !this.state.sidebarPushCollapsed
     });
   }
 
+  /**
+   * handle perubah pada routing
+   * setel state kondisi menu yang aktif sesuai dengan route
+   */
   onRouteChanged() {
     this.setState({
       menuActivated: this.props.location.pathname
     });
   }
 
+  /**
+   * ketika komponen di-mount 
+   * lakukan perubahan pada state menu yang aktif sesuai dengan route
+   */
   componentDidMount() {
     this.setState({
       menuActivated: this.props.location.pathname
     });
   }
 
+  /**
+   * Ketika komponen mendapatkan perubahan data
+   * ubah kondisi side bar, lebarkan atau kecilkan
+   * dan panggil @function onRouteChanged jika terjadi perubahaan route url
+   * @param {object} prevProps - properti sebelumnya
+   * @param {object} prevState - state sebelumnya
+   */
   componentDidUpdate(prevProps, prevState) {
     if (this.state.sidebarPushCollapsed !== prevState.sidebarPushCollapsed) {
       document.body.classList.toggle('sidebar-mini', this.state.sidebarPushCollapsed);

@@ -1,3 +1,7 @@
+/**
+ * Login.js
+ * berfungsi sebagai container login
+ */
 import React, { Component } from 'react';
 import axios from 'axios';
 import {
@@ -6,10 +10,17 @@ import {
   setToken, 
   setRefreshToken, 
   setRefreshTime 
-} from '../api';
+} from '../../api';
 
+/**
+ * Class yang mewakili komponen login
+ */
 class Login extends Component {
 
+  /**
+   * Membuat Login
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
@@ -25,6 +36,11 @@ class Login extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  /**
+   * handle perubahan event pada form
+   * Setel state sesuai dengan form yang diubah
+   * @param {event} event - javascript event onChange
+   */
   handleChange(event) {
     const target = event.target;
     const value = target.value;
@@ -35,6 +51,13 @@ class Login extends Component {
     });
   }
 
+  /**
+   * handle submit form
+   * lakukan pemanggilan API login, jika berhasil maka setel informasi username, token, refresh token, refresh time
+   * pada local storage dan arahkan pengguna pada dashboard
+   * jika tidak berhasil maka tampilkan pesan error
+   * @param {event} event - javascript event onSubmit
+   */
   handleSubmit(event) {
     event.preventDefault();
     axios.post(API_URL_LOGIN, {
@@ -69,6 +92,10 @@ class Login extends Component {
     })
   }
 
+  /**
+   * Saat komponen di-mount, lakukan pengecekan terhadap properti 'authenticated'
+   * jika pengguna telah terautentikasi maka paksa pengguna untuk menuju ke dashboard
+   */
   componentDidMount() {
     // redirect to dashboard if already authenticated
     if (this.props.authenticated === true) {

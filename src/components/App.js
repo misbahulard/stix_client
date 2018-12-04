@@ -1,3 +1,7 @@
+/**
+ * App.js
+ * berfungsi sebagai container utama dari aplikasi.
+ */
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
@@ -12,11 +16,17 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/style.css'
 
-import DefaultContainer from './DefaultContainer';
-import Login from './Login';
+import DefaultContainer from './container/DefaultContainer';
+import Login from './util/Login';
 
+/**
+ * Class yang mewakili komponen App
+ */
 class App extends Component {
-
+  /**
+   * Membuat App
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -27,12 +37,22 @@ class App extends Component {
     this.handleLogout = this.handleLogout.bind(this);
   }
   
+  /**
+   * handle autentikasi user
+   * update kondisi state 'authenticated' ke local storage
+   */
   handleAuth() {
     this.setState({
       authenticated: checkAuth()
     });
   }
 
+  /**
+   * handle logout user
+   * - update state loading
+   * - panggil api untuk logout
+   * hancurkan semua state dan isi dari localstorage yang berhubungan dengan user
+   */
   handleLogout() {
     // call logout api
     this.setState({
@@ -69,6 +89,10 @@ class App extends Component {
 
   render() {
     return (
+      /**
+       * jika url = login maka arahkan ke komponen login
+       * jika tidak maka arahkan ke komponen Default Container [main app]
+       */
       <Switch>
         <Route path="/login" render={(props) => {
           return <Login {...props} handleAuth={this.handleAuth} authenticated={this.state.authenticated} />

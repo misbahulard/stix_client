@@ -1,9 +1,22 @@
+
+/**
+ * StixGraph.js
+ * berfungsi untuk menampilkan Graph Stix menggunakan D3
+ */
 import React, { Component } from 'react'
 import * as d3 from 'd3';
 
-import '../css/StixGraph.css';
+import '../../css/StixGraph.css';
 
+/**
+ * Class yang mewakili komponen Graf Stix
+ */
 class StixGraph extends Component {
+
+  /**
+   * Membuat Graf
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
     this.createGraph = this.createGraph.bind(this);
@@ -16,10 +29,18 @@ class StixGraph extends Component {
     }
   }
 
+  /**
+   * setel properti default
+   */
   static defaultProps = {
     handleSelectNode: null
   };
 
+  /**
+   * Ketika komponen di-mount
+   * lakukan perubahan pada kondisi state ukuran (width, height)
+   * dan buat graf baru
+   */
   componentDidMount() {
     this.setState({
       width: this.props.size.width,
@@ -28,6 +49,12 @@ class StixGraph extends Component {
     this.createGraph();
   }
 
+  /**
+   * Ketika komponen mendapatkan perubahan data
+   * lakukan perubahan pada kondisi state ukuran (width, height)
+   * dan buat graf baru
+   * @param {object} prevProps - property sebelumnya
+   */
   componentDidUpdate(prevProps) {
     if (prevProps.size.width !== this.props.size.width) {
       this.setState({
@@ -42,10 +69,11 @@ class StixGraph extends Component {
     }
   }
 
+  /**
+   * Membuat graf stix menggunakan d3
+   */
   createGraph() {
     if (this.props.data != null) {
-      // RESET FIRST
-      
       // Bagian Config
       const nodeSvg = this.nodeSvg;
       var d3Config = {

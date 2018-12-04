@@ -1,3 +1,6 @@
+/**
+ * Bundle.js berfungsi sebagai container Bundle
+ */
 import React, { Component } from 'react';
 
 import axios from 'axios';
@@ -5,18 +8,25 @@ import {
   API_URL_BUNDLES, 
   setHeader, 
   getToken 
-} from '../api';
+} from '../../api';
 
 import StixGraph from './StixGraph';
 
 import ReactTable from "react-table";
-import "../css/custom-react-table.css";
+import "../../css/custom-react-table.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Class yang mewakili komponen Bundle
+ */
 class Bundle extends Component {
 
+  /**
+   * Membuat Bundle
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
@@ -43,6 +53,10 @@ class Bundle extends Component {
     this.fetchData = this.fetchData.bind(this);
   }
 
+  /**
+   * Berfungsi sebagai callback dari reference elemen DOM
+   * Untuk mengukur tinggi dan lebar dari elemen DOM dan melakukan perubahan pada state
+   */
   refCallback = element => {
     if (element) {
       var el = element.getBoundingClientRect();
@@ -56,18 +70,32 @@ class Bundle extends Component {
     }
   }
 
+  /**
+   * handle Click pada node graf
+   * berfungsi untuk merubah kondisi state data selectedNode untuk merubah informasi node
+   * @param {object} data - object di bundle
+   */
   handleSelectNode(data) {
     this.setState({
       selectedNode: this.normalizeObject(data)
     });
   }
 
+  /**
+   * handle Click id pada object bundle
+   * berfungsi untuk merubah kondisi state data bundle yang dipilih pengguna
+   * @param {object} data - object bundle
+   */
   handleClickId(data) {
     this.setState({
       selectedBundle: data
     });
   }
 
+  /**
+   * nomrmalisasi object dengan cara menghilangkan informasi yang tidak penting
+   * @param {object} data - object bundle
+   */
   normalizeObject(data) {
     var clearedObj = Object.assign({}, data)
     delete clearedObj["fx"];
@@ -81,6 +109,11 @@ class Bundle extends Component {
     return clearedObj;
   }
 
+  /**
+   * dapatkan legenda dari object bundle
+   * legenda berupa icon dan nama objectnya
+   * @param {object} data - object bundle
+   */
   getLegend(data) {
     var legend = [];
     var objects = data.objects;
@@ -97,6 +130,12 @@ class Bundle extends Component {
     return legend;
   }
 
+  /**
+   * bergungsi untuk memanggil api dengan parameter dari kondisi state react table
+   * seperti: page, page size, sorted, filtered
+   * @param {object} state - object state dari react table
+   * @param {object} instance - object instance dari react table
+   */
   fetchData(state, instance) {
     this.setState({
       bundles: {
@@ -129,6 +168,12 @@ class Bundle extends Component {
         }));
   }
 
+  /**
+   * saat komponen mendapat update 
+   * maka lakukan perubahan pada kondisi ukuran elemen untuk merubah ukuran container SVG Graph STIX
+   * @param {object} prevProps - property sebelumnya 
+   * @param {*} prevState - state sebelumnya
+   */
   componentDidUpdate(prevProps, prevState) {
     if (this.state.elementSize.width !== prevState.elementSize.width) {
       var el = this.state.elementRef.getBoundingClientRect();
@@ -141,6 +186,12 @@ class Bundle extends Component {
     }
   }
 
+  /**
+   * Saat komponen di-mount
+   * Cek apakah di url terdapat parameter id,
+   * jika ada maka panggil API bundle dengan ID bundle yang spesifik,
+   * jika tidak maka panggil API bundle langsung
+   */
   componentDidMount() {
     // call bundle
     setHeader(getToken())
@@ -188,6 +239,10 @@ class Bundle extends Component {
   }
 
   render() {
+    /**
+     * jika kondisi loading = True
+     * maka tampilkan halaman loading
+     */
     var singleBundle = false;
     if (this.props.match.params.id) {
       singleBundle = true;

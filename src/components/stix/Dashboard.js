@@ -1,3 +1,7 @@
+/**
+ * Dashboard.js
+ * Berfungsi sebagai container Dashboard
+ */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -11,7 +15,7 @@ import {
   API_URL_BUNDLES, 
   setHeader, 
   getToken 
-} from '../api';
+} from '../../api';
 
 import StixGraph from './StixGraph';
 
@@ -25,8 +29,15 @@ import {
   faCodeBranch
 } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Class yang mewakili komponen Dashboard
+ */
 class Dashboard extends Component {
 
+  /**
+   * Membuat Dashboard
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
@@ -64,6 +75,10 @@ class Dashboard extends Component {
     }
   }
 
+  /**
+   * Berfungsi sebagai callback dari reference elemen DOM
+   * Untuk mengukur tinggi dan lebar dari elemen DOM dan melakukan perubahan pada state
+   */
   refCallback = element => {
     if (element) {
       this.elementRef = element;
@@ -77,6 +92,12 @@ class Dashboard extends Component {
     }
   };
 
+  /**
+   * saat komponen di-mount, 
+   * - setel loading = True
+   * - lakukan pemanggilan API [Observed Data, Indicator, Identity, Threat Actor, Attack Pattern Bundle]
+   * - lakukan perubahan pada state sesuai dengan tiap datanya.
+   */
   componentDidMount() {
     this.setState({ isLoading: true });
 
@@ -167,7 +188,10 @@ class Dashboard extends Component {
   }
 
   render() {
-
+    /**
+     * jika kondisi loading = True
+     * maka tampilkan halaman loading
+     */
     if (this.state.isLoading === true ) {
       return (
         <section className="section">

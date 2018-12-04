@@ -1,21 +1,33 @@
+/**
+ * Indicator.js
+ * berfungsi sebagai container Indicator
+ */
 import React, { Component } from 'react';
 
 import axios from 'axios';
 import { 
-  API_URL_IDENTITY, 
+  API_URL_INDICATOR, 
   setHeader, 
   getToken 
-} from '../api';
+} from '../../api';
 
 import ReactTable from "react-table";
-import "../css/custom-react-table.css";
+import "../../css/custom-react-table.css";
 
-class Identity extends Component {
+/**
+ * Class yang mewakili komponen Indicator
+ */
+class Indicator extends Component {
+
+  /**
+   * Membuat Indicator
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
     this.state = {
-      identities: {
+      indicators: {
         data: [],
         pages: null,
         loading: false
@@ -28,20 +40,31 @@ class Identity extends Component {
     this.handleClickId = this.handleClickId.bind(this);
   }
 
+  /**
+   * handle Click id pada object indicator
+   * berfungsi untuk merubah kondisi state data indicator yang dipilih pengguna
+   * @param {object} data - object indicator
+   */
   handleClickId(data) {
     this.setState({
       selectedData: data
     });
   }
 
+  /**
+   * bergungsi untuk memanggil api dengan parameter dari kondisi state react table
+   * seperti: page, page size, sorted, filtered
+   * @param {object} state - object state dari react table
+   * @param {object} instance - object instance dari react table
+   */
   fetchData(state, instance) {
     this.setState({
-      identities: {
+      indicators: {
         loading: true
       }
     })
 
-    axios.post(API_URL_IDENTITY, {
+    axios.post(API_URL_INDICATOR, {
       offset: state.page,
       limit: state.pageSize,
       sorted: state.sorted,
@@ -49,7 +72,7 @@ class Identity extends Component {
     })
       .then(result => {
         this.setState({
-          identities: {
+          indicators: {
             data: result.data.data,
             pages: result.data.size,
             loading: false
@@ -63,15 +86,21 @@ class Identity extends Component {
         }));
   }
 
+  /**
+   * Saat komponen di-mount
+   * Cek apakah di url terdapat parameter id,
+   * jika ada maka panggil API indicator dengan ID indicator yang spesifik,
+   * jika tidak maka panggil API indicator langsung
+   */
   componentDidMount() {
     setHeader(getToken())
 
     if (this.props.match.params.id) {
       var id = this.props.match.params.id;
-      axios.get(API_URL_IDENTITY + "/" + id)
+      axios.get(API_URL_INDICATOR + "/" + id)
         .then(result => {
           this.setState({
-            identities: {
+            indicators: {
               data: result.data,
               pages: 1,
               loading: false
@@ -85,10 +114,10 @@ class Identity extends Component {
             isLoading: false
           }));
     } else {
-      axios.post(API_URL_IDENTITY)
+      axios.post(API_URL_INDICATOR)
         .then(result => {
           this.setState({
-            identities: {
+            indicators: {
               data: result.data.data,
               pages: result.data.size,
               loading: false
@@ -105,6 +134,10 @@ class Identity extends Component {
   }
 
   render() {
+    /**
+     * jika kondisi loading = True
+     * maka tampilkan halaman loading
+     */
     if (this.state.isLoading === true ) {
       return (
         <section className="section">
@@ -117,13 +150,13 @@ class Identity extends Component {
       return (
         <section className="section">
           <div className="section-header">
-            <h1>Identities</h1> 
+            <h1>Indicators</h1> 
           </div>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Identity Detail</h4>
+                  <h4>Indicator Detail</h4>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -139,8 +172,14 @@ class Identity extends Component {
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Description</div>
                     <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.description}</div>
 
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Identity Class</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.identity_class}</div>
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Labels</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.labels}</div>
+
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Pattern</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.pattern}</div>
+                    
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Valid From</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.valid_from).toDateString())}</div>
 
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Created</div>
                     <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.created).toDateString())}</div>
@@ -156,7 +195,7 @@ class Identity extends Component {
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Identity Data</h4>
+                  <h4>Indicator Data</h4>
                 </div>
                 <div className="card-body">
                   <ReactTable
@@ -188,9 +227,9 @@ class Identity extends Component {
                         accessor: d => String(new Date(d.modified).toDateString())
                       }
                     ]}
-                    data={this.state.identities.data}
-                    pages={this.state.identities.pages}
-                    loading={this.state.identities.loading}
+                    data={this.state.indicators.data}
+                    pages={this.state.indicators.pages}
+                    loading={this.state.indicators.loading}
                     manual
                     filterable
                     onFetchData={this.fetchData}
@@ -207,4 +246,4 @@ class Identity extends Component {
   }
 }
 
-export default Identity;
+export default Indicator;

@@ -1,6 +1,10 @@
+/**
+ * AppNavbar.js
+ * berfungsi sebagai container NavBar
+ */
 import React, { Component } from 'react';
 
-import { getUsername } from '../api';
+import { getUsername } from '../../api';
 
 import {
   Collapse,
@@ -14,7 +18,15 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faUser, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
+/**
+ * Class yang mewakili komponen NavBar
+ */
 class AppNavbar extends Component {
+
+  /**
+   * Membuat Navbar
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
@@ -24,16 +36,27 @@ class AppNavbar extends Component {
       isOpen: false
     };
   }
+
+  /**
+   * Berfungsi untuk melakukan perubahan pada kondisi state menjadi terbuka atau tertutup
+   * saat fungsi toggle dipanggil
+   */
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+
+  /**
+   * Saat komponen di-mount, ambil username menggunakan fungsi @function getUsername 
+   * dan lakukan perubahan pada state
+   */
   componentDidMount() {
     this.setState({
       username: getUsername()
     });
   }
+  
   render() {
     return (
       <div className="navbar-wrapper">

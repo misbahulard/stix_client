@@ -1,21 +1,33 @@
+/**
+ * ThreatActor.js
+ * berfungsi sebagai container Threat Actor
+ */
 import React, { Component } from 'react';
 
 import axios from 'axios';
 import { 
-  API_URL_OBSERVED_DATA, 
+  API_URL_THREAT_ACTOR, 
   setHeader, 
   getToken 
-} from '../api';
+} from '../../api';
 
 import ReactTable from "react-table";
-import "../css/custom-react-table.css";
+import "../../css/custom-react-table.css";
 
-class ObservedData extends Component {
+/**
+ * Class yang memiliki komponen ThreatActor
+ */
+class ThreatActor extends Component {
+
+  /**
+   * Membuat Indicator
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
 
     this.state = {
-      observedDatas: {
+      threatActors: {
         data: [],
         pages: null,
         loading: false
@@ -28,20 +40,31 @@ class ObservedData extends Component {
     this.handleClickId = this.handleClickId.bind(this);
   }
 
+  /**
+   * handle Click id pada object threat actor
+   * berfungsi untuk merubah kondisi state data threat actor yang dipilih pengguna
+   * @param {object} data - object threat actor
+   */
   handleClickId(data) {
     this.setState({
       selectedData: data
     });
   }
 
+  /**
+   * bergungsi untuk memanggil api dengan parameter dari kondisi state react table
+   * seperti: page, page size, sorted, filtered
+   * @param {object} state - object state dari react table
+   * @param {object} instance - object instance dari react table
+   */
   fetchData(state, instance) {
     this.setState({
-      observedDatas: {
+      threatActors: {
         loading: true
       }
     })
 
-    axios.post(API_URL_OBSERVED_DATA, {
+    axios.post(API_URL_THREAT_ACTOR, {
       offset: state.page,
       limit: state.pageSize,
       sorted: state.sorted,
@@ -49,7 +72,7 @@ class ObservedData extends Component {
     })
       .then(result => {
         this.setState({
-          observedDatas: {
+          threatActors: {
             data: result.data.data,
             pages: result.data.size,
             loading: false
@@ -63,15 +86,21 @@ class ObservedData extends Component {
         }));
   }
 
+  /**
+   * Saat komponen di-mount
+   * Cek apakah di url terdapat parameter id,
+   * jika ada maka panggil API threat actor dengan ID threat actor yang spesifik,
+   * jika tidak maka panggil API threat actor langsung
+   */
   componentDidMount() {
     setHeader(getToken())
 
     if (this.props.match.params.id) {
       var id = this.props.match.params.id;
-      axios.get(API_URL_OBSERVED_DATA + "/" + id)
+      axios.get(API_URL_THREAT_ACTOR + "/" + id)
         .then(result => {
           this.setState({
-            observedDatas: {
+            threatActors: {
               data: result.data,
               pages: 1,
               loading: false
@@ -85,10 +114,10 @@ class ObservedData extends Component {
             isLoading: false
           }));
     } else {
-      axios.post(API_URL_OBSERVED_DATA)
+      axios.post(API_URL_THREAT_ACTOR)
         .then(result => {
           this.setState({
-            observedDatas: {
+            threatActors: {
               data: result.data.data,
               pages: result.data.size,
               loading: false
@@ -105,6 +134,10 @@ class ObservedData extends Component {
   }
 
   render() {
+    /**
+     * jika kondisi loading = True
+     * maka tampilkan halaman loading
+     */
     if (this.state.isLoading === true ) {
       return (
         <section className="section">
@@ -117,13 +150,13 @@ class ObservedData extends Component {
       return (
         <section className="section">
           <div className="section-header">
-            <h1>Observed Data</h1> 
+            <h1>Threat Actors</h1> 
           </div>
           <div className="row">
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Observed Detail</h4>
+                  <h4>Threat Actor Detail</h4>
                 </div>
                 <div className="card-body">
                   <div className="row">
@@ -133,27 +166,14 @@ class ObservedData extends Component {
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Type</div>
                     <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.type}</div>
 
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">First Observed</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.first_observed).toDateString())}</div>
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Name</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.name}</div>
 
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Last Observed</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.last_observed).toDateString())}</div>
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Description</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.description}</div>
 
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Number Observed</div>
-                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.number_observed}</div>
-
-                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Objects</div>
-                    <div className="col-md-10 col-9 col-sm-8"></div>
-                      <div className="col-md-2 col-3 col-sm-4 font-weight-bold">&#9500; Type</div>
-                      <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.objects[2].type}</div>
-                      <div className="col-md-2 col-3 col-sm-4 font-weight-bold">&#9500; Source IP</div>
-                      <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.objects[0].value}</div>
-                      <div className="col-md-2 col-3 col-sm-4 font-weight-bold">&#9500; Destination IP</div>
-                      <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.objects[1].value}</div>
-                      <div className="col-md-2 col-3 col-sm-4 font-weight-bold">&#9500; Destination Port</div>
-                      <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.objects[2].dst_port}</div>
-                      <div className="col-md-2 col-3 col-sm-4 font-weight-bold">&#9500; Protocol</div>
-                      <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.objects[2].protocols[0] + ' - ' + this.state.selectedData.objects[2].protocols[1]}</div>
+                    <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Labels</div>
+                    <div className="col-md-10 col-9 col-sm-8">: {this.state.selectedData.labels}</div>
 
                     <div className="col-md-2 col-3 col-sm-4 font-weight-bold">Created</div>
                     <div className="col-md-10 col-9 col-sm-8">: {String(new Date(this.state.selectedData.created).toDateString())}</div>
@@ -169,7 +189,7 @@ class ObservedData extends Component {
             <div className="col-lg-12 col-md-12 col-12 col-sm-12">
               <div className="card card-primary">
                 <div className="card-header">
-                  <h4>Observed Data</h4>
+                  <h4>Threat Actor Data</h4>
                 </div>
                 <div className="card-body">
                   <ReactTable
@@ -183,8 +203,12 @@ class ObservedData extends Component {
                         minWidth: 200
                       },
                       {
-                        Header: "Number Observed",
-                        accessor: "number_observed"
+                        Header: "Name",
+                        accessor: "name"
+                      },
+                      {
+                        Header: "Description",
+                        accessor: "description"
                       },
                       {
                         Header: "Created",
@@ -195,21 +219,11 @@ class ObservedData extends Component {
                         Header: "Modified",
                         id: "modified",
                         accessor: d => String(new Date(d.modified).toDateString())
-                      },
-                      {
-                        Header: "First Observed",
-                        id: "first_observed",
-                        accessor: d => String(new Date(d.first_observed).toDateString())
-                      },
-                      {
-                        Header: "Last Observed",
-                        id: "last_observed",
-                        accessor: d => String(new Date(d.last_observed).toDateString())
-                      },
+                      }
                     ]}
-                    data={this.state.observedDatas.data}
-                    pages={this.state.observedDatas.pages}
-                    loading={this.state.observedDatas.loading}
+                    data={this.state.threatActors.data}
+                    pages={this.state.threatActors.pages}
+                    loading={this.state.threatActors.loading}
                     manual
                     filterable
                     onFetchData={this.fetchData}
@@ -226,4 +240,4 @@ class ObservedData extends Component {
   }
 }
 
-export default ObservedData;
+export default ThreatActor;

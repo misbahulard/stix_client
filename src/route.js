@@ -1,10 +1,16 @@
-import Dashboard from './components/Dashboard';
-import ObservedData from './components/ObservedData';
-import Indicator from './components/Indicator';
-import Identity from './components/Identity';
-import ThreatActor from './components/ThreatActor';
-import AttackPattern from './components/AttackPattern';
-import Bundle from './components/Bundle';
+/**
+ * route.js
+ * berfungsi sebagai tempat routing dari aplikasi, disini didefinisikan komponen beserta rutenya.
+ * @module route
+ * @returns {object} routes - rute object
+ */
+import Dashboard from './components/stix/Dashboard';
+import ObservedData from './components/stix/ObservedData';
+import Indicator from './components/stix/Indicator';
+import Identity from './components/stix/Identity';
+import ThreatActor from './components/stix/ThreatActor';
+import AttackPattern from './components/stix/AttackPattern';
+import Bundle from './components/stix/Bundle';
 
 const routes = [
   {

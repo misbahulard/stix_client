@@ -1,5 +1,12 @@
+/**
+ * AppFooter.js
+ * berfungsi sebagai container Footer
+ */
 import React, { Component } from 'react';
 
+/**
+ * Class yang mewakili komponen Footer
+ */
 class AppFooter extends Component {
   render() {
     return (

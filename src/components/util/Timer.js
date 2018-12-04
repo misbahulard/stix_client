@@ -1,17 +1,20 @@
+/**
+ * Timer.js
+ * Berfungsi sebagai utilitas untuk menghitung waktu sesi user aktif
+ * Jika sesi telah habis paksa logout user
+ */
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import axios from 'axios';
-import { 
-  API_URL_REFRESH_TOKEN, 
-  setHeader, 
-  setToken, 
-  getRefreshToken, 
-  getRefreshTime,
-  setRefreshTime
-} from '../api';
-
+import { getRefreshTime } from '../../api';
+/**
+ * Class yang mewakili komponen utilitas Timer 
+ */
 class Timer extends Component {
 
+  /**
+   * Membuat Timer
+   * @param {any} props - berisi properti yang diturunkan dari parent
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -24,42 +27,24 @@ class Timer extends Component {
     };
   }
 
+  /**
+   * Fungsi untuk melakukan pengecekan sesi tiap detik
+   * Jika waktu saat ini lebih dari waktu sesi dari user maka paksa untuk logout
+   */
   tick() {
     this.setState({
       currentTime: new Date().getTime()
     });
     if (this.state.currentTime > this.state.execTime) {
       // force logout
-      console.log('logout!')
       this.props.handleLogout();
-
-      // this.setState({ isLoading: true });
-
-      // // Call refresh token
-      // var refresh_token = getRefreshToken();
-      // setHeader(refresh_token);
-      // axios.post(API_URL_REFRESH_TOKEN).then(result => {
-      //   var data = result.data;
-      //   if (data.success) {
-      //     setToken(data.access_token);
-      //     setRefreshTime();
-      //     this.setState({
-      //       isLoading: false,
-      //       execTime: getRefreshTime()
-      //     });
-      //   } else {
-      //     // TODO: To something here / redirect to login
-      //     this.props.handleLogout();
-      //   }
-      // }).catch(error => {
-      //   this.setState({
-      //     error,
-      //     isLoading: false
-      //   });
-      // });
     }
   }
 
+  /**
+   * Saat komponen di-mount, jika waktu eksekusi tidak ada (atau belum login) maka paksa untuk login
+   * Jika tidak maka setel timer untuk pengecekan sesi
+   */
   componentDidMount() {
     if (this.state.execTime != null) {
       var interval = setInterval(() => this.tick(), 1000);
@@ -71,6 +56,9 @@ class Timer extends Component {
     }
   }
 
+  /**
+   * Saat komponen di unmount, hapus timer yang telah disetel sebelumnya
+   */
   componentWillUnmount() {
     clearInterval(this.state.intervalId);
   }
